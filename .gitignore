@@ -1,0 +1,18 @@
+# DATABASE
+
+*.db
+*.sqlite3
+
+#logs
+
+*.log
+
+#IDE
+
+.idea/
+.vscode/
+
+#media and static
+
+media/
+static/
