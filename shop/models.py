@@ -2,8 +2,14 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.urls import reverse
 
 User = get_user_model()
+
+
+def get_product_url(obj, viewname):
+    ct_model = obj.__class__._meta.model_name
+    return reverse(viewname, kwargs={'ct_model': ct_model, 'slug': obj.slug})
 
 
 class LatestProductsManager:
@@ -64,6 +70,9 @@ class Notebook(Product):
     ram = models.CharField(max_length=10, verbose_name='ОЗУ')
     video = models.CharField(max_length=255, verbose_name='Видеокарта')
 
+    def get_absolute_url(self):
+        return get_product_url(self, 'product_detail')
+
     def __str__(self):
         return f'{self.category.title} {self.title}'
 
@@ -76,6 +85,9 @@ class Smartphone(Product):
     battery = models.CharField(max_length=255, verbose_name='Баттарея')
     sd = models.BooleanField(verbose_name='Карта памяти')
     sd_volume = models.CharField(max_length=255, verbose_name='Максимальный объём', blank=True, null=True)
+
+    def get_absolute_url(self):
+        return get_product_url(self, 'product_detail')
 
     def __str__(self):
         return f'{self.category.title} {self.title}'
