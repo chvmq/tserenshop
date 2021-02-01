@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load specifications %}
 
 {% block breadcrump %}
 {% include 'shop/inc/_breadcrump.html' %}
@@ -13,8 +14,19 @@
 <div class="col-md-4">
     <h3>{{ product.title }}</h3>
     <p>Цена: {{ product.price }} </p>
-    <p>Цена: {{ product.description }} </p>
+    <p>Цена: {{ product.description|truncatewords:40 }} </p>
 </div>
+
+<p class="mt-4">Характеристики</p>
+
+{% product_spec product %}
+
+<!--{% if product.category.title == 'Notebooks' %}-->
+<!--{% include 'shop/inc/_notebook_spec.html' %}-->
+<!--{% elif product.category.title == 'Smartphones' %}-->
+<!--{% include 'shop/inc/_smartphone_spec.html' %}-->
+<!--{% endif %}-->
+
 
 {% endblock %}
 
