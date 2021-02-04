@@ -95,15 +95,15 @@ class Smartphone(Product):
 
 class CartProduct(models.Model):
     user = models.ForeignKey('Customer', verbose_name='Покупатель', on_delete=models.CASCADE)
-    cart = models.ForeignKey('Cart', verbose_name='Корзина', on_delete=models.CASCADE)
+    cart = models.ForeignKey('Cart', verbose_name='Корзина', on_delete=models.CASCADE, related_name='related_products')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveSmallIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
-    number = models.PositiveSmallIntegerField(default=1)
-    final_price = models.PositiveIntegerField()
+    number = models.PositiveSmallIntegerField(default=1, verbose_name='Общее число товаров')
+    final_price = models.PositiveIntegerField('Общая цена товаров')
 
     def __str__(self):
-        return str(self.user)
+        return f'Продукт {self.content_object.title} для корзины'
 
 
 class Cart(models.Model):
@@ -111,6 +111,8 @@ class Cart(models.Model):
     products = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart')
     total_products = models.PositiveSmallIntegerField(default=0)
     final_price = models.PositiveIntegerField()
+    in_order = models.BooleanField(verbose_name='В заказе', default=False)
+    for_anonymous_user = models.BooleanField(default=False, verbose_name='Для анонимного пользователя')
 
     def __str__(self):
         return str(self.id)
