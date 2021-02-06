@@ -40,6 +40,9 @@ class Category(models.Model):
     title = models.CharField(verbose_name='Категория', max_length=255)
     slug = models.SlugField(unique=True)
 
+    def get_absolute_url(self):
+        return reverse('category_detail', kwargs={'slug': self.slug})
+
     def __str__(self):
         return self.title
 
