@@ -45,7 +45,9 @@ def get_product_spec(product, model_name):
         table_content += TABLE_CONTENT.format(name=name, value=getattr(product, value))
     return table_content
 
-@register.simple_tag
+
+@register.simple_tag()
 def product_spec(product):
+    """Строит HTML форму спецификации товара"""
     model_name = product.__class__._meta.model_name
     return mark_safe(TABLE_HEAD + get_product_spec(product, model_name) + TABLE_FOOT)
