@@ -1,11 +1,10 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic import DetailView, View
+from django.views.generic import DetailView, View, ListView
 from .models import Notebook, Smartphone, Category, LatestProducts, Customer, Cart
 
 
 def index(request):
-    print(request)
     products = LatestProducts.objects.get_products_for_main_page('notebook', 'smartphone')
     customer = Customer.objects.get(user=request.user)
     cart = Cart.objects.get(owner=customer)
@@ -49,9 +48,10 @@ class CartView(View):
         return render(request, 'shop/cart.html', context)
 
 
-class CategoryDetailView(DetailView):
+class CategoryListView(ListView):
     model = Category
-    queryset = Category.objects.all()
+    template_name = 'shop/category_list.html'
     context_object_name = 'category'
-    template_name = 'shop/category_detail.html'
-    slug_url_kwarg = 'slug'
+
+    def get_queryset(self):
+        return Category.objects.get(slug=self.kwargs['slug'])
