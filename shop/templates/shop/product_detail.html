@@ -15,18 +15,13 @@
     <h3>{{ product.title }}</h3>
     <p>Цена: {{ product.price }} </p>
     <p>Цена: {{ product.description|truncatewords:40 }} </p>
+    <hr>
+    <a href="{% url 'add_to_cart' ct_model=ct_model slug=product.slug %}"><button class="btn btn-danger">Добавить в корзину</button></a>
 </div>
 
 <p class="mt-4">Характеристики</p>
 
 {% product_spec product %}
-
-<!--{% if product.category.title == 'Notebooks' %}-->
-<!--{% include 'shop/inc/_notebook_spec.html' %}-->
-<!--{% elif product.category.title == 'Smartphones' %}-->
-<!--{% include 'shop/inc/_smartphone_spec.html' %}-->
-<!--{% endif %}-->
-
 
 {% endblock %}
 
