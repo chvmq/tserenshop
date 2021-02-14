@@ -62,6 +62,8 @@ class Product(models.Model):
     description = models.TextField(verbose_name='Описание')
     image = models.ImageField(verbose_name='Фото')
 
+    # content_object = GenericRelation
+
     def __str__(self):
         return self.title
 
@@ -107,6 +109,10 @@ class CartProduct(models.Model):
 
     def __str__(self):
         return f'Продукт {self.content_object.title} для корзины'
+
+    def save(self, *args, **kwargs):
+        self.final_price = self.number * self.content_object.price
+        super().save(*args, **kwargs)
 
 
 class Cart(models.Model):
