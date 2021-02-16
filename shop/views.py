@@ -42,7 +42,6 @@ class CartView(CartMixin, View):
     def get(self, request, *args, **kwargs):
         context = {
             'cart': self.cart,
-            # 'customer': self.cart.owner,
         }
         return render(request, 'shop/cart.html', context)
 

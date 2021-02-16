@@ -65,3 +65,25 @@ class ClearCart(CartProductMixin, CartMixin, View):
         self.cart.save()
 
         return HttpResponseRedirect('/cart/')
+
+
+class ClearDetailCart(CartProductMixin, CartMixin, View):
+    """Убирает один продукт из корзины"""
+
+    def get(self, *args, **kwargs):
+        ct_model = kwargs.get('ct_model')
+        product_slug = kwargs.get('slug')
+
+        for product in self.products:
+            if product.content_type.model == ct_model and product.content_object.slug == product_slug:
+                product.delete()
+
+                self.cart.final_price -= product.final_price
+
+                if product.number > self.cart.total_products:
+                    self.cart.total_products -= 1
+                else:
+                    self.cart.total_products -= product.number
+                self.cart.save()
+
+        return HttpResponseRedirect('/cart/')
