@@ -1,9 +1,10 @@
-from django.http import HttpResponseRedirect
-from .models import CartProduct
-from .utils import CartMixin
-from django.views.generic import View
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Sum
+from django.http import HttpResponseRedirect
+from django.views.generic import View
+
+from .models import CartProduct
+from .utils import CartMixin, CartProductMixin
 
 
 class AddProductToCart(CartMixin, View):
@@ -23,7 +24,9 @@ class AddProductToCart(CartMixin, View):
             object_id=product.id,
         )
 
+        cart_product.number += 1
         cart_product.final_price = cart_product.number * cart_product.content_object.price
+        cart_product.save()
 
         if created:
             self.cart.products.add(cart_product)
@@ -32,16 +35,33 @@ class AddProductToCart(CartMixin, View):
             self.cart.final_price = 0
 
         cart_data = self.cart.products.aggregate(Sum('final_price'), Count('id'))
-        if cart_data.get('final_price__sum'):
+        if not cart_data['final_price__sum']:
+            cart_data['final_price__sum'] = cart_product.content_object.price
+
+        if cart_data['final_price__sum']:
             self.cart.final_price = cart_data['final_price__sum']
         else:
             self.cart.final_price = 0
 
-        if cart_data.get('id__count'):
+        if cart_data['id__count']:
             self.cart.total_products = cart_data['id__count']
         else:
-            self.cart.total_products = cart_data['id__count']
+            self.cart.total_products = 0
 
-        cart_product.save()
         self.cart.save()
+
+        return HttpResponseRedirect('/cart/')
+
+
+class ClearCart(CartProductMixin, CartMixin, View):
+    """Очищает корзину"""
+
+    def get(self, *args, **kwargs):
+        for cart_product in self.products:
+            cart_product.delete()
+
+        self.cart.final_price = 0
+        self.cart.total_products = 0
+        self.cart.save()
+
         return HttpResponseRedirect('/cart/')

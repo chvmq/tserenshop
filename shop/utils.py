@@ -1,8 +1,19 @@
 from django.views.generic import View
-from .models import Customer, Cart
+from .models import Customer, Cart, CartProduct
+
+
+class CartProductMixin(View):
+    """Возвращает список карт продуктов"""
+
+    def dispatch(self, request, *args, **kwargs):
+        products = CartProduct.objects.filter(cart=request.user.id)
+
+        self.products = products
+        return super().dispatch(request, *args, **kwargs)
 
 
 class CartMixin(View):
+    """Возвращает корзину"""
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:

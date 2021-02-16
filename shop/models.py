@@ -104,7 +104,7 @@ class CartProduct(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveSmallIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
-    number = models.PositiveIntegerField(default=1, verbose_name='Общее число товаров')
+    number = models.PositiveIntegerField(default=0, verbose_name='Общее число товаров')
     final_price = models.PositiveIntegerField('Общая цена товаров', null=True)
 
     def __str__(self):

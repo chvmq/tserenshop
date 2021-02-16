@@ -24,6 +24,7 @@
     </tr>
     {% endfor %}
     <tr>
+        <td><a href="{% url 'clear_cart' %}"><button type="button" class="btn btn-danger">Очистить корзину</button></a></td>
         <td colspan="2"></td>
         <td>Итого:</td>
         <td>{{ cart.total_products }} Товара</td>
