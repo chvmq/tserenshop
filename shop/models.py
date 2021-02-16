@@ -104,27 +104,32 @@ class CartProduct(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveSmallIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
-    number = models.PositiveSmallIntegerField(default=1, verbose_name='Общее число товаров')
-    final_price = models.PositiveIntegerField('Общая цена товаров')
+    number = models.PositiveIntegerField(default=1, verbose_name='Общее число товаров')
+    final_price = models.PositiveIntegerField('Общая цена товаров', null=True)
 
     def __str__(self):
         return f'Продукт {self.content_object.title} для корзины'
 
-    def save(self, *args, **kwargs):
-        self.final_price = self.number * self.content_object.price
-        super().save(*args, **kwargs)
-
 
 class Cart(models.Model):
-    owner = models.ForeignKey('Customer', verbose_name='Владелец', on_delete=models.CASCADE)
+    owner = models.ForeignKey('Customer', verbose_name='Владелец', on_delete=models.CASCADE, null=True)
     products = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart')
     total_products = models.PositiveSmallIntegerField(default=0)
-    final_price = models.PositiveIntegerField()
+    final_price = models.PositiveIntegerField(default=0)
     in_order = models.BooleanField(verbose_name='В заказе', default=False)
     for_anonymous_user = models.BooleanField(default=False, verbose_name='Для анонимного пользователя')
 
     def __str__(self):
         return str(self.id)
+
+    # def save(self, *args, **kwargs):
+    #     cart_data = self.products.aggregate(models.Sum('final_price'), models.Count('id'))
+    #     if cart_data.get('final_price__sum'):
+    #         self.final_price = cart_data['final_price_sum']
+    #     else:
+    #         self.final_price = 0
+    #     self.total_products = cart_data['id__count']
+    #     super().save(*args, **kwargs)
 
 
 class Customer(models.Model):
@@ -134,8 +139,8 @@ class Customer(models.Model):
         db_table = 'customer'
 
     user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
-    number = models.CharField(max_length=20)
-    address = models.CharField(max_length=255)
+    number = models.CharField(max_length=20, null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f'Покупатель: {self.user.first_name} {self.user.last_name}'
