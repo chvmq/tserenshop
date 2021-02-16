@@ -1,19 +1,20 @@
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import DetailView, View, ListView
 from .models import Notebook, Smartphone, Category, LatestProducts, Customer, Cart
+from .utils import *
 
 
-def index(request):
-    products = LatestProducts.objects.get_products_for_main_page('notebook', 'smartphone')
-    customer = Customer.objects.get(user=request.user)
-    cart = Cart.objects.get(owner=customer)
-    context = {
-        'products': products,
-        'customer': customer,
-        'cart': cart,
-    }
-    return render(request, 'shop/index.html', context)
+class IndexView(CartMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        products = LatestProducts.objects.get_products_for_main_page(
+            'notebook', 'smartphone', with_respect_to='notebook'
+        )
+        context = {
+            'products': products,
+            'cart': self.cart
+        }
+        return render(request, 'shop/index.html', context)
 
 
 class ProductDetailView(DetailView):
@@ -37,13 +38,11 @@ class ProductDetailView(DetailView):
     slug_url_kwarg = 'slug'
 
 
-class CartView(View):
+class CartView(CartMixin, View):
     def get(self, request, *args, **kwargs):
-        customer = Customer.objects.get(user=request.user)
-        cart = Cart.objects.get(owner=customer)
         context = {
-            'cart': cart,
-            'customer': customer,
+            'cart': self.cart,
+            # 'customer': self.cart.owner,
         }
         return render(request, 'shop/cart.html', context)
 
