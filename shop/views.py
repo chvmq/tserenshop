@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.views.generic import DetailView, View, ListView
-from .models import Notebook, Smartphone, Category, LatestProducts, Customer, Cart
+from django.views.generic import DetailView, ListView
+
+from .models import Notebook, Smartphone, Category, LatestProducts
 from .utils import *
 
 
@@ -12,7 +13,8 @@ class IndexView(CartMixin, View):
         )
         context = {
             'products': products,
-            'cart': self.cart
+            'cart': self.cart,
+            'number_products_in_cart': self.cart.total_products,
         }
         return render(request, 'shop/index.html', context)
 
@@ -46,10 +48,15 @@ class CartView(CartMixin, View):
         return render(request, 'shop/cart.html', context)
 
 
-class CategoryListView(ListView):
+class CategoryListView(CartMixin, ListView):
     model = Category
     template_name = 'shop/category_list.html'
     context_object_name = 'category'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cart'] = self.cart
+        return context
 
     def get_queryset(self):
         return Category.objects.get(slug=self.kwargs['slug'])

@@ -4,18 +4,16 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="{% url 'index' %}">Tseren Shop</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          {% for m in menu %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url m.url_name %}">{{ m.title }}</a>
-          </li>
-          {% endfor %}
+        <a class="navbar-brand" href="{% url 'index' %}">Tseren Shop</a>
+        <ul class="navbar-nav">
+            {% for m in menu %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url m.url_name %}">{{ m.title }}</a>
+            </li>
+            {% endfor %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'cart' %}">Корзина <span class="badge rounded-pill bg-danger">{{ cart.products.count }}</span></a>
+            </li>
         </ul>
-      </div>
     </div>
-  </nav>
+</nav>

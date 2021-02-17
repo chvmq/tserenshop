@@ -25,7 +25,9 @@
             <p class="card-text">{{ product.description|truncatewords:30 }}</p>
         </div>
         <div class="card-footer">
-            <small class="text-muted">Подробнее</small>
+            <a href="{% url 'add_to_cart' ct_model=product.category|lower slug=product.slug%}">
+                <button type="button" class="btn btn-danger">Добавить в корзину</button>
+            </a>
         </div>
     </div>
 </div>
