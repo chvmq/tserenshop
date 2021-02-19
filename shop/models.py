@@ -1,10 +1,7 @@
-from django.db import models
-from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+from django.db import models
 from django.urls import reverse
-
-User = get_user_model()
 
 
 def get_product_url(obj, viewname):
@@ -45,7 +42,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
-
     class Meta:
         verbose_name = 'Категория(ю)'
         verbose_name_plural = 'Категории'
@@ -69,6 +65,11 @@ class Product(models.Model):
 
 
 class Notebook(Product):
+    class Meta:
+        db_table = 'notebook'
+        verbose_name = 'Ноутбук'
+        verbose_name_plural = 'Ноутбуки'
+
     diagonal = models.CharField(max_length=255, verbose_name='Диагональ')
     display = models.CharField(max_length=255, verbose_name='Тип дисплея')
     processor_freq = models.CharField(max_length=255, verbose_name='Частота процессора')
@@ -83,6 +84,11 @@ class Notebook(Product):
 
 
 class Smartphone(Product):
+    class Meta:
+        db_table = 'smartphone'
+        verbose_name = 'Смартфон'
+        verbose_name_plural = 'Смартфоны'
+
     diagonal = models.CharField(max_length=255, verbose_name='Диагональ')
     ram = models.CharField(max_length=10, verbose_name='ОЗУ')
     camera = models.CharField(max_length=255, verbose_name='Камера')
@@ -99,7 +105,7 @@ class Smartphone(Product):
 
 
 class CartProduct(models.Model):
-    user = models.ForeignKey('Customer', verbose_name='Покупатель', on_delete=models.CASCADE)
+    user = models.ForeignKey('account.Account', verbose_name='Покупатель', on_delete=models.CASCADE)
     cart = models.ForeignKey('Cart', verbose_name='Корзина', on_delete=models.CASCADE, related_name='related_products')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveSmallIntegerField()
@@ -115,7 +121,7 @@ class CartProduct(models.Model):
 
 
 class Cart(models.Model):
-    owner = models.ForeignKey('Customer', verbose_name='Владелец', on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey('account.Account', verbose_name='Владелец', on_delete=models.CASCADE, null=True)
     products = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart')
     total_products = models.PositiveSmallIntegerField(default=0)
     final_price = models.PositiveIntegerField(default=0)
@@ -123,18 +129,4 @@ class Cart(models.Model):
     for_anonymous_user = models.BooleanField(default=False, verbose_name='Для анонимного пользователя')
 
     def __str__(self):
-        return str(self.id)
-
-
-class Customer(models.Model):
-    class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-        db_table = 'customer'
-
-    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
-    number = models.CharField(max_length=20, null=True, blank=True)
-    address = models.CharField(max_length=255, null=True, blank=True)
-
-    def __str__(self):
-        return f'Покупатель: {self.user.first_name} {self.user.last_name}'
+        return f'{self.owner.username}'

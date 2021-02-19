@@ -99,6 +99,7 @@ class ClearCart(CartProductMixin, CartMixin, View):
 
     def get(self, *args, **kwargs):
         for cart_product in self.products:
+            self.cart.products.remove(cart_product)
             cart_product.delete()
 
         self.cart.final_price = 0
