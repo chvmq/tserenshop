@@ -6,6 +6,7 @@
 #migrations
 
 shop/migrations/
+account/migrations/
 
 #logs
 
