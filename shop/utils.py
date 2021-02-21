@@ -7,8 +7,9 @@ class CartProductMixin(View):
     """Возвращает список карт продуктов"""
 
     def dispatch(self, request, *args, **kwargs):
-        products = CartProduct.objects.filter(cart=request.user.id)
-        print(request.user.id)
+        products = CartProduct.objects.filter(user=request.user)
+        # print(request.user)
+        # print(products)
 
         self.products = products
 
@@ -19,11 +20,12 @@ class CartMixin(View):
     """Возвращает корзину"""
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user .is_authenticated:
-            customer = Account.objects.filter(user=request.user).first()
+        if request.user.is_authenticated:
+            customer = Account.objects.filter(username=request.user).first()
+            # print(request.user)
             if not customer:
                 customer = Account.objects.create(
-                    user=request.user
+                    username=request.user
                 )
             cart = Cart.objects.filter(owner=customer, in_order=False).first()
             if not cart:

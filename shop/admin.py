@@ -6,7 +6,7 @@ from django.forms import ModelChoiceField
 class NotebookAdminForm(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'category':
-            return ModelChoiceField(Category.objects.filter(slug='notebooks'))
+            return ModelChoiceField(Category.objects.filter(slug='notebook'))
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     prepopulated_fields = {'slug': ['title']}
@@ -15,7 +15,7 @@ class NotebookAdminForm(admin.ModelAdmin):
 class SmartphoneAdminForm(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'category':
-            return ModelChoiceField(Category.objects.filter(slug='smartphones'))
+            return ModelChoiceField(Category.objects.filter(slug='smartphone'))
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     prepopulated_fields = {'slug': ['title']}

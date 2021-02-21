@@ -67,28 +67,23 @@ class ChangeNumberProducts(CartMixin, CartProductMixin, View):
     """Изменяет количество продуктов в корзине"""
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
 
         new_number = request.POST.get('number')
 
         ct_model = kwargs.get('ct_model')
         product_slug = kwargs.get('slug')
 
-        content_type = ContentType.objects.get(model=ct_model)
-        product = content_type.model_class().objects.get(slug=product_slug)
+        updated_info_final_price = 0
+        for product in self.products:
+            if product.content_object.slug == product_slug:
+                product.number = int(new_number)
+                product.final_price = int(new_number) * product.content_object.price
 
-        cart_product = CartProduct.objects.get(
-            user=self.cart.owner,
-            cart=self.cart,
-            content_type=content_type,
-            object_id=product.id,
-        )
+                product.save()
 
-        cart_product.number = new_number
-        cart_product.final_price = new_number * cart_product.content_object.price
+            updated_info_final_price += product.final_price
 
-        cart_product.save()
-
+        self.cart.final_price = updated_info_final_price
         self.cart.save()
 
         return HttpResponseRedirect('/cart/')
@@ -118,6 +113,7 @@ class ClearDetailCart(CartProductMixin, CartMixin, View):
 
         for product in self.products:
             if product.content_type.model == ct_model and product.content_object.slug == product_slug:
+                self.cart.products.remove(product)
                 product.delete()
 
                 self.cart.final_price -= product.final_price
