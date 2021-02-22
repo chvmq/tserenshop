@@ -1,8 +1,12 @@
+from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Sum
 from django.http import HttpResponseRedirect
 from django.views.generic import View
+from django.db import transaction
 
+from account.models import Account
+from .forms import OrderForm
 from .models import CartProduct
 from .utils import CartMixin, CartProductMixin
 
@@ -125,3 +129,33 @@ class ClearDetailCart(CartProductMixin, CartMixin, View):
                 self.cart.save()
 
         return HttpResponseRedirect('/cart/')
+
+
+class MakeOrderView(CartMixin, View):
+    SUCCESS_MESSAGE = 'Спасибо за заказ! Менеджер свяжется с вами'
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        customer = Account.objects.get(username=request.user)
+        form = OrderForm(request.POST or None)
+        if form.is_valid():
+            new_order = form.save(commit=False)
+            new_order.customer = customer
+            new_order.first_name = form.cleaned_data['first_name']
+            new_order.last_name = form.cleaned_data['last_name']
+            new_order.phone = form.cleaned_data['phone']
+            new_order.address = form.cleaned_data['address']
+            new_order.buying_type = form.cleaned_data['buying_type']
+            new_order.order_date = form.cleaned_data['order_date']
+            new_order.comment = form.cleaned_data['comment']
+            new_order.save()
+            self.cart.in_order = True
+            new_order.cart = self.cart
+            new_order.save()
+            customer.orders.add(new_order)
+            self.cart.save()
+            messages.add_message(request, messages.INFO, self.SUCCESS_MESSAGE)
+
+            return HttpResponseRedirect('/')
+        else:
+            return HttpResponseRedirect('/checkout/')

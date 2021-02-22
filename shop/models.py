@@ -139,7 +139,7 @@ class Cart(models.Model):
     for_anonymous_user = models.BooleanField(default=False, verbose_name='Для анонимного пользователя')
 
     def __str__(self):
-        return f'{self.owner.username}'
+        return f'Корзина пользователя {self.owner.username}'
 
 
 class Order(models.Model):
@@ -176,7 +176,8 @@ class Order(models.Model):
     first_name = models.CharField(max_length=255, verbose_name='Имя')
     last_name = models.CharField(max_length=255, verbose_name='Фамилия')
     phone = models.CharField(max_length=30, verbose_name='Номер телефона')
-    address = models.ForeignKey(to='account.Address', on_delete=models.CASCADE, verbose_name='Адресс пользователя')
+    cart = models.ForeignKey(Cart, verbose_name='Корзина', on_delete=models.CASCADE, null=True, blank=True)
+    address = models.CharField(max_length=1024, verbose_name='Адрес')
     status = models.CharField(
         max_length=100,
         choices=STATUS_CHOICES,

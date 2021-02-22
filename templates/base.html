@@ -20,16 +20,15 @@
     <div class="row">
 
         {% block sidebar %}
-        {% include 'shop/inc/_sidebar.html' %}
+            {% include 'shop/inc/_sidebar.html' %}
         {% endblock sidebar %}
 
         <div class="col-lg-9">
+            {% block breadcrump %}
+            {% endblock breadcrump %}
 
             {% block big_slide %}
             {% endblock big_slide %}
-
-            {% block breadcrump %}
-            {% endblock breadcrump %}
 
             {% block cart_row %}
             {% endblock cart_row %}

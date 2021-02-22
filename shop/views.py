@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView
 
+from .forms import OrderForm
 from .models import Notebook, Smartphone, Category, LatestProducts
 from .utils import *
 
@@ -60,3 +61,13 @@ class CategoryListView(CartMixin, ListView):
 
     def get_queryset(self):
         return Category.objects.get(slug=self.kwargs['slug'])
+
+
+class CheckOutView(CartMixin, View):
+    def get(self, request, *args, **kwargs):
+        form = OrderForm(request.POST or None)
+        context = {
+            'cart': self.cart,
+            'form': form,
+        }
+        return render(request, 'shop/checkout.html', context)

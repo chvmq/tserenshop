@@ -1,31 +1,45 @@
 {% extends 'base.html' %}
 
 {% block sidebar %}
-{% include 'shop/inc/_sidebar.html' %}
+    {% include 'shop/inc/_sidebar.html' %}
 {% endblock sidebar %}
 
+{% block breadcrump %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <strong>{{ message }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endblock breadcrump %}
+
 {% block big_slide %}
-{% include 'shop/inc/_big_slide.html' %}
+    {% include 'shop/inc/_big_slide.html' %}
 {% endblock big_slide %}
 
 {% block row %}
-{% for product in products %}
-<div class="col-lg-4 col-md-6 mb-4">
-    <div class="card h-100">
-        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
-        <div class="card-body">
-            <h4 class="card-title">
-                <a href="{{ product.get_absolute_url }}">{{ product }}</a>
-            </h4>
-            <h5>{{ product.price }} RUB</h5>
-            <p class="card-text">{{ product.description|truncatewords:30 }}</p>
+    {% for product in products %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <a href="{{ product.get_absolute_url }}">{{ product }}</a>
+                    </h4>
+                    <h5>{{ product.price }} RUB</h5>
+                    <p class="card-text">{{ product.description|truncatewords:30 }}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'add_to_cart' ct_model=product.category|lower slug=product.slug %}">
+                        <button type="button" class="btn btn-danger">Добавить в корзину</button>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="card-footer">
-            <a href="{% url 'add_to_cart' ct_model=product.category|lower slug=product.slug%}">
-                <button type="button" class="btn btn-danger">Добавить в корзину</button>
-            </a>
-        </div>
-    </div>
-</div>
-{% endfor %}
+    {% endfor %}
 {% endblock row %}
