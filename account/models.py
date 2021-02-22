@@ -54,7 +54,11 @@ class Account(AbstractBaseUser):
     first_name = models.CharField(verbose_name='Имя', max_length=255)
     last_name = models.CharField(verbose_name='Фамилия', max_length=255)
     number = models.CharField(verbose_name='Номер телефона', max_length=30, blank=True, null=True)
-    orders = models.ManyToManyField(to='shop.Order', verbose_name='Заказы покупателя', related_name='related_customer')
+    orders = models.ManyToManyField(
+        to='shop.Order',
+        verbose_name='Заказы покупателя',
+        related_name='related_customer',
+        blank=True)
 
     objects = AccountManager()
 
