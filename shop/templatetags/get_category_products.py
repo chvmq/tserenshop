@@ -1,6 +1,8 @@
 from django.template import Library
 from ..models import Notebook, Smartphone
 
+"""Костыли для вывода товаров по категории"""
+
 register = Library()
 
 
