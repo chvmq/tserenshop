@@ -4,7 +4,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -15,7 +14,6 @@ SECRET_KEY = 'x5a1p*oflfei4to6kp+%hbr*nxg0#s&_e*#4@uwnw_rmmqvo%)'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -43,6 +41,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'tserenshop.urls'
@@ -65,7 +64,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tserenshop.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -80,10 +78,10 @@ DATABASES = {
     }
 }
 
-if os.getlogin() != 'lari':
-    import dj_database_url
-    db_from_env = dj_database_url.config()
-    DATABASES['default'].update(db_from_env)
+# if os.getlogin() != 'lari':
+#     import dj_database_url
+#     db_from_env = dj_database_url.config()
+#     DATABASES['default'].update(db_from_env)
 
 
 # Password validation
@@ -118,8 +116,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staitcfiles')
