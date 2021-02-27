@@ -19,7 +19,7 @@ account/migrations/
 
 #IDE
 
-/idea/
+.idea/
 
 #media
 
