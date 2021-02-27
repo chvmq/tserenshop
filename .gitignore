@@ -1,7 +1,7 @@
 #env
 
 .env/
-env/
+/env/
 
 # DATABASE
 
@@ -10,7 +10,8 @@ env/
 
 #migrations
 
-/migrations/
+shop/migrations/
+account/migrations/
 
 #logs
 
@@ -18,11 +19,11 @@ env/
 
 #IDE
 
-.idea/
+/idea/
 
 #media
 
-media/
+/media/
 *.jpeg
 *.png
 *.jpg
