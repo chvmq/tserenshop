@@ -1,3 +1,8 @@
+#env
+
+.env/
+env/
+
 # DATABASE
 
 *.db
@@ -5,8 +10,7 @@
 
 #migrations
 
-shop/migrations/
-account/migrations/
+/migrations/
 
 #logs
 
@@ -15,11 +19,13 @@ account/migrations/
 #IDE
 
 .idea/
-.vscode/
 
 #media
 
 media/
+*.jpeg
+*.png
+*.jpg
 
 # pyc
 
