@@ -72,18 +72,6 @@ WSGI_APPLICATION = 'tserenshop.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'tseren_shop',
-        'USER': 'lari',
-        'PASSWORD': 'root',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-}
-
-if os.getlogin() != 'lari':
-    DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'd61h93b6hl6pdc',
         'USER': 'xxazxoadqheour',
         'PASSWORD': '7442f842a879038798c89e6984394261b9861d36063e67f4f9790cc4e641f814',
