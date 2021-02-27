@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load specifications %}
+
+{% block breadcrump %}
+{% include 'shop/inc/_breadcrump.html' %}
+{% endblock breadcrump %}
+
+{% block row %}
+
+<div class="col-md-4">
+    <img src="{{ product.image.url }}" class="img-fluid">
+</div>
+
+<div class="col-md-4">
+    <h3>{{ product.title }}</h3>
+    <p>Цена: {{ product.price }} </p>
+    <p>Цена: {{ product.description|truncatewords:40 }} </p>
+    <hr>
+    <a href="{% url 'add_to_cart' ct_model=ct_model slug=product.slug %}">
+        <button class="btn btn-danger">Добавить в корзину</button>
+    </a>
+</div>
+
+<p class="mt-4">Характеристики</p>
+
+{% product_spec product %}
+
+{% endblock %}
+

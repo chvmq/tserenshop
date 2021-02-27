@@ -1,0 +1,16 @@
+{% load get_sidebar_info %}
+
+<div class="col-lg-3">
+
+    <h1 class="my-4">{% get_title_above_sidebar %}</h1>
+    <div class="list-group">
+
+        {% get_category_for_sidebar as categories %}
+
+        {% for category in categories %}
+        <a href="{{ category.get_absolute_url }}" class="list-group-item">{{ category }}</a>
+        {% endfor %}
+
+    </div>
+
+</div>
