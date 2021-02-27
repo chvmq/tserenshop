@@ -80,6 +80,22 @@ DATABASES = {
     }
 }
 
+if os.getlogin() != 'lari':
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd61h93b6hl6pdc',
+        'USER': 'xxazxoadqheour',
+        'PASSWORD': '7442f842a879038798c89e6984394261b9861d36063e67f4f9790cc4e641f814',
+        'HOST': 'ec2-34-247-118-233.eu-west-1.compute.amazonaws.com',
+        'PORT': '5432',
+        'DATABASE': 'd61h93b6hl6pdc',
+        'HEROKU CLI': 'heroku pg:psql postgresql-cylindrical-05322 --app dorj',
+        'URI': 'postgres://xxazxoadqheour:7442f842a879038798c89e6984394261b9861d36063e67f4f9790cc4e641f814@ec2-34-247-118-233.eu-west-1.compute.amazonaws.com:5432/d61h93b6hl6pdc',
+    }
+}
+
+    
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
