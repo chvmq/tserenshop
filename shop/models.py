@@ -139,7 +139,7 @@ class Cart(models.Model):
     for_anonymous_user = models.BooleanField(default=False, verbose_name='Для анонимного пользователя')
 
     def __str__(self):
-        return f'Корзина пользователя {self.owner.username}'
+        return f'Корзина пользователя {self.owner}'
 
 
 class Order(models.Model):
