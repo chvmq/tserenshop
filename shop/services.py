@@ -136,7 +136,7 @@ class MakeOrderView(CartMixin, View):
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        customer = Account.objects.get(username=request.user)
+        customer = Account.objects.filter(username=request.user).first()
         form = OrderForm(request.POST or None)
         if form.is_valid():
             new_order = form.save(commit=False)
