@@ -5,8 +5,8 @@
 
 #migrations
 
-shop/migrations/
-account/migrations/
+#shop/migrations/
+#account/migrations/
 
 #logs
 

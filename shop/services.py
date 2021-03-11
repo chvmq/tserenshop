@@ -73,8 +73,6 @@ class ChangeNumberProducts(CartMixin, CartProductMixin, View):
     def post(self, request, *args, **kwargs):
 
         new_number = request.POST.get('number')
-
-        ct_model = kwargs.get('ct_model')
         product_slug = kwargs.get('slug')
 
         updated_info_final_price = 0
@@ -85,7 +83,7 @@ class ChangeNumberProducts(CartMixin, CartProductMixin, View):
 
                 product.save()
 
-            updated_info_final_price += product.final_price
+            updated_info_final_price += int(product.final_price)
 
         self.cart.final_price = updated_info_final_price
         self.cart.save()
