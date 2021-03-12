@@ -1,9 +1,51 @@
+from django.contrib import messages
+from django.contrib.auth import login, logout
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView
 
-from .forms import OrderForm
+from .forms import OrderForm, UserRegisterForm, UserLoginForm
 from .models import Notebook, Smartphone, Category, LatestProducts
 from .utils import *
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, 'SUCCESS')
+            return HttpResponseRedirect('/')
+        else:
+            messages.error(request, 'FAIL')
+    else:
+        form = UserRegisterForm()
+
+    return render(request, 'shop/register.html', {'form': form})
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            messages.success(request, 'SUCCESS')
+            return HttpResponseRedirect('/')
+        else:
+            messages.error(request, 'FAIL')
+            return HttpResponseRedirect('/')
+    else:
+        form = UserLoginForm()
+
+    return render(request, 'shop/login.html', {'form': form})
+
+
+def user_logout(request):
+    messages.success(request, 'YOU HAVE LOGOUTED')
+    logout(request)
+    return HttpResponseRedirect('/')
 
 
 class IndexView(CartMixin, View):

@@ -14,4 +14,7 @@ urlpatterns = [
          name='change_number_products'),
     path('check_out/', CheckOutView.as_view(), name='checkout'),
     path('make_order/', MakeOrderView.as_view(), name='make_order'),
+    path('register/', register, name='register'),
+    path('login/', user_login, name='login'),
+    path('logout/', user_logout, name='logout')
 ]
