@@ -11,6 +11,13 @@ from .models import CartProduct
 from .utils import CartMixin, CartProductMixin
 
 
+def get_products_for_main_page(*args):
+    list_of_products = []
+    for model in args:
+        ct_model = ContentType.objects.get(model)
+        products = ct_model.model._base_manager.all()
+
+
 class AddProductToCart(CartMixin, View):
     """Добавляет товар в корзину"""
 
@@ -31,12 +38,20 @@ class AddProductToCart(CartMixin, View):
         content_type = ContentType.objects.get(model=ct_model)
         product = content_type.model_class().objects.get(slug=product_slug)
 
-        cart_product, created = CartProduct.objects.get_or_create(
-            user=self.cart.owner,
-            cart=self.cart,
-            content_type=content_type,
-            object_id=product.id,
-        )
+        if self.cart.owner:
+            cart_product, created = CartProduct.objects.get_or_create(
+                user=None,
+                cart=self.cart,
+                content_type=content_type,
+                object_id=product.id,
+            )
+        else:
+            cart_product, created = CartProduct.objects.get_or_create(
+                user=self.cart.owner,
+                cart=self.cart,
+                content_type=content_type,
+                object_id=product.id,
+            )
 
         cart_product.number += 1
         cart_product.final_price = cart_product.number * cart_product.content_object.price

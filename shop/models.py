@@ -113,7 +113,7 @@ class Smartphone(Product):
 class CartProduct(models.Model):
     """Модель товара в корзине"""
 
-    user = models.ForeignKey('account.Account', verbose_name='Покупатель', on_delete=models.CASCADE)
+    user = models.ForeignKey('account.Account', verbose_name='Покупатель', on_delete=models.CASCADE, null=True)
     cart = models.ForeignKey('Cart', verbose_name='Корзина', on_delete=models.CASCADE, related_name='related_products')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveSmallIntegerField()
